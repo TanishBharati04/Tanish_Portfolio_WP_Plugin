@@ -1,0 +1,96 @@
+.tanish-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: black;
+}
+
+.tanish-export, .tanish-import {
+    width: 45%;
+    padding: 20px;
+    background: #ff8e8e;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+#export_progress {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.column-to-be-export, 
+.export-based-on-cat,
+.export-based-on-tag {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.column-to-be-export select, 
+.export-based-on-cat select,
+.export-based-on-tag select {
+    width: 12em;
+    border-radius: 12px;
+    background-color: #ffffff;
+}
+
+#download_csv {
+    width: 14em;
+    padding: 8px;
+    background-color: #0000ff;
+    color: #fff;
+    border-radius: 14px;
+    border-style: none;
+}
+
+#download_csv:hover {
+    background-color: #a1a1fa;
+    transform: scale(1.1, 1.1);
+}
+
+#import_form div {
+    width: 95%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    margin: 6px 0;
+}
+
+#import_form div input, 
+#import_form div textarea {
+    width: 18em;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+#import_form div input:focus, 
+#import_form div textarea:focus {
+    border-color:#0000ff;
+}
+
+.upload-btn {
+    width: 14em;
+    padding: 8px;
+    background-color: #0000ff;
+    color: #fff;
+    border-radius: 14px;
+    border-style: none;
+    margin: 10px auto 0;
+}
+
+.upload-btn:hover {
+    background-color: #a1a1fa;
+    transform: scale(1.1, 1.1);
+}
