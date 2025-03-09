@@ -1,78 +1,128 @@
 <?php
+// Prevent direct access
 if (!defined('ABSPATH')) {
     exit;
 }
 
 class Tanish_Portfolio_Import_Handler {
-
+    
     public function __construct() {
-        add_action('wp_ajax_import_project', array($this, 'import_project'));
-        add_action('wp_ajax_nopriv_import_project', array($this, 'import_project'));
+        add_action('wp_ajax_tanish_import_csv', array($this, 'handle_csv_upload'));
+        add_action('wp_ajax_nopriv_tanish_import_csv', array($this, 'handle_csv_upload'));
+
+        // Register AJAX action for batch processing
+        add_action('wp_ajax_tanish_process_csv_batch', array($this, 'process_csv_batch'));
     }
 
-    public function import_project() {
-        // Verify nonce
-        if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'tanish_ajax_nonce')) {
-            wp_send_json_error('Security check failed.');
+    // Handle CSV Upload
+    public function handle_csv_upload() {
+        check_ajax_referer('tanish_nonce', 'security');
+
+        // if (!isset($_POST['security']) || !wp_verify_nonce($_POST['security'], 'tanish_nonce')) {
+        //     error_log("Security check failed in import handler handle_csv_upload.");
+        //     wp_send_json_error(array('message' => 'Security check failed in import handler handle_csv_upload.'));
+        // }
+    
+        if (!isset($_FILES['csv_file'])) {
+            wp_send_json_error(array('message' => 'No file uploaded.'));
         }
-
-        // Validate required fields
-        if (empty($_POST['title'])) {
-            wp_send_json_error('Title is required.', 400);
+    
+        $file = $_FILES['csv_file'];
+    
+        // Validate file format
+        $allowed_mime_types = array('text/csv', 'application/vnd.ms-excel');
+        if (!in_array($file['type'], $allowed_mime_types)) {
+            wp_send_json_error(array('message' => 'Invalid file format. Please upload a CSV file.'));
         }
-
-        $title = sanitize_text_field($_POST['title']);
-        $description = sanitize_textarea_field($_POST['description']);
-        $categories = sanitize_text_field($_POST['category']); // Comma-separated categories
-        $tags = sanitize_text_field($_POST['tags']); // Comma-separated tags
-        $start_date = sanitize_text_field($_POST['start_date']);
-        $end_date = sanitize_text_field($_POST['end_date']);
-
-        // Insert project post
-        $post_id = wp_insert_post(array(
-            'post_title'   => $title,
-            'post_content' => $description,
-            'post_status'  => 'publish',
-            'post_type'    => 'project'
-        ));
-
-        if (!$post_id) {
-            wp_send_json_error('Failed to insert project.', 500);
+    
+        $csv_file = fopen($file['tmp_name'], 'r');
+        if (!$csv_file) {
+            wp_send_json_error(array('message' => 'Failed to open CSV file.'));
         }
-
-        // Assign multiple categories
-        if (!empty($categories)) {
-            $category_array = array_map('trim', explode(',', $categories));
-            $category_ids = array();
-
-            foreach ($category_array as $category_name) {
-                $term = term_exists($category_name, 'category');
-
-                if (!$term) {
-                    // Create new category if it doesn't exist
-                    $new_term = wp_insert_term($category_name, 'category');
-                    if (!is_wp_error($new_term)) {
-                        $category_ids[] = $new_term['term_id'];
-                    }
-                } else {
-                    $category_ids[] = $term['term_id'];
-                }
+    
+        // Read header row
+        $header = fgetcsv($csv_file);
+        if (!$header) {
+            wp_send_json_error(array('message' => 'Empty CSV file.'));
+        }
+    
+        $required_columns = array('title', 'description', 'category', 'tag', 'start_date', 'end_date');
+        
+        // Validate columns
+        foreach ($required_columns as $col) {
+            if (!in_array($col, $header)) {
+                wp_send_json_error(array('message' => "Missing required column: $col"));
             }
-
-            wp_set_post_terms($post_id, $category_ids, 'category');
         }
-
-        // Assign multiple tags
-        if (!empty($tags)) {
-            $tag_array = array_map('trim', explode(',', $tags));
-            wp_set_post_terms($post_id, $tag_array, 'post_tag', false);
+    
+        // Store rows in session for batch processing
+        $csv_data = [];
+        while (($row = fgetcsv($csv_file)) !== false) {
+            $csv_data[] = array_combine($header, $row);
         }
-
-        // Save meta fields
-        update_post_meta($post_id, '_project_start_date', $start_date);
-        update_post_meta($post_id, '_project_end_date', $end_date);
-
-        wp_send_json_success('Project successfully imported with ID: ' . $post_id);
+        fclose($csv_file);
+    
+        // Store data in a transient for batch processing
+        $batch_size = 5;
+        set_transient('tanish_import_csv_data', $csv_data, HOUR_IN_SECONDS);
+        set_transient('tanish_import_csv_progress', 0, HOUR_IN_SECONDS);
+        
+        wp_send_json_success(array(
+            'message' => 'CSV file validated successfully.',
+            'total_records' => count($csv_data),
+            'batch_size' => $batch_size
+        ));
     }
+
+    public function process_csv_batch() {
+        check_ajax_referer('tanish_nonce', 'security');
+    
+        $csv_data = get_transient('tanish_import_csv_data');
+        if (!$csv_data || empty($csv_data)) {
+            wp_send_json_success(array('message' => 'Import completed.', 'completed' => true));
+        }
+    
+        $batch_size = 5;
+        $processed = 0;
+    
+        for ($i = 0; $i < $batch_size; $i++) {
+            if (empty($csv_data)) {
+                break;
+            }
+    
+            $record = array_shift($csv_data);
+            
+            // Insert project post
+            $post_id = wp_insert_post(array(
+                'post_title'   => sanitize_text_field($record['title']),
+                'post_content' => sanitize_textarea_field($record['description']),
+                'post_status'  => 'publish',
+                'post_type'    => 'project'
+            ));
+    
+            if ($post_id) {
+                // Assign category
+                wp_set_object_terms($post_id, sanitize_text_field($record['category']), 'project_category');
+                // Assign tags
+                wp_set_object_terms($post_id, explode(',', sanitize_text_field($record['tag'])), 'project_tag');
+                // Add metadata
+                update_post_meta($post_id, 'start_date', sanitize_text_field($record['start_date']));
+                update_post_meta($post_id, 'end_date', sanitize_text_field($record['end_date']));
+            }
+    
+            $processed++;
+        }
+    
+        set_transient('tanish_import_csv_data', $csv_data, HOUR_IN_SECONDS);
+        $progress = get_transient('tanish_import_csv_progress') + $processed;
+        set_transient('tanish_import_csv_progress', $progress, HOUR_IN_SECONDS);
+    
+        wp_send_json_success(array(
+            'message' => "$progress records uploaded...",
+            'progress' => $progress,
+            'completed' => empty($csv_data)
+        ));
+    }   
+    
 }
 

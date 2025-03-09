@@ -38,6 +38,7 @@ class Tanish_Portfolio_Import_Export {
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('tanish_nonce')
         ));
+        
     }
 
     function tanish_portfolio_allow_csv_uploads($mime_types) {

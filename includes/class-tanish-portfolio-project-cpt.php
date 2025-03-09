@@ -45,5 +45,8 @@ class Tanish_Portfolio_Project_CPT {
         );
 
         register_post_type('project', $args);
+
+        // 🔍 Debug: Log available taxonomies for 'project'
+        // error_log("Registered Taxonomies for 'project': " . print_r(get_object_taxonomies('project', 'names'), true));
     }
 }

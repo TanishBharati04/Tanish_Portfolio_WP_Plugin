@@ -8,7 +8,7 @@ class Tanish_Portfolio_Meta_Box {
 
     public function __construct() {
         add_action('add_meta_boxes', array($this, 'add_project_meta_box'));
-        // add_action('save_post', array($this, 'save_project_meta_box'));
+        add_action('save_post', array($this, 'save_project_meta_box'));
     }
 
     public function add_project_meta_box() {
@@ -94,6 +94,5 @@ class Tanish_Portfolio_Meta_Box {
             update_post_meta($post_id, '_project_end_date', $end_date);
         }
     }
-    // add_action('save_post', array($this, 'save_project_meta_box'));
     
 }
