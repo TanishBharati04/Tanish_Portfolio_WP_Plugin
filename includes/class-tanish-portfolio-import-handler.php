@@ -102,19 +102,52 @@ class Tanish_Portfolio_Import_Handler {
     
             if ($post_id) {
                 // Assign category
-                wp_set_object_terms($post_id, sanitize_text_field($record['category']), 'project_category');
+                if (!empty($record['category'])) {
+                    $category_id = term_exists($record['category'], 'category'); // Check if exists
+
+                    if ($category_id === 0 || $category_id === null) {
+                        $category_id = wp_insert_term($record['category'], 'category'); // Create if not exists
+                        $category_id = $category_id['term_id'];
+                    } else {
+                        $category_id = $category_id['term_id'];
+                    }
+                    wp_set_object_terms($post_id, $category_id, 'category');
+                }                
+
                 // Assign tags
-                wp_set_object_terms($post_id, explode(',', sanitize_text_field($record['tag'])), 'project_tag');
-                // Add metadata
-                update_post_meta($post_id, 'start_date', sanitize_text_field($record['start_date']));
-                update_post_meta($post_id, 'end_date', sanitize_text_field($record['end_date']));
+                if (!empty($record['tag'])) {
+                    $tags_array = explode(',', $record['tag']);
+                    $tag_ids = [];
+                    foreach ($tags_array as $tag) {
+                        $tag_id = term_exists(trim($tag), 'post_tag');
+                        if ($tag_id === 0 || $tag_id === null) {
+                            $tag_id = wp_insert_term(trim($tag), 'post_tag');
+                            $tag_ids[] = $tag_id['term_id'];
+                        } else {
+                            $tag_ids[] = $tag_id['term_id'];
+                        }
+                    }
+                    wp_set_object_terms($post_id, $tag_ids, 'post_tag');
+                }
+                
+
+                // Add metadata for start_date and end_date (fix applied)
+                if (!empty($record['start_date']) && strtotime($record['start_date'])) {
+                    update_post_meta($post_id, 'start_date', date('Y-m-d', strtotime($record['start_date'])));
+                }
+
+                if (!empty($record['end_date']) && strtotime($record['end_date'])) {
+                    update_post_meta($post_id, 'end_date', date('Y-m-d', strtotime($record['end_date'])));
+                }
             }
     
             $processed++;
         }
     
         set_transient('tanish_import_csv_data', $csv_data, HOUR_IN_SECONDS);
+
         $progress = get_transient('tanish_import_csv_progress') + $processed;
+        
         set_transient('tanish_import_csv_progress', $progress, HOUR_IN_SECONDS);
     
         wp_send_json_success(array(

@@ -128,8 +128,8 @@ class Tanish_Portfolio_Export_Handler {
                     'Description' => get_the_content(),
                     'Categories'  => implode(', ', wp_get_post_terms(get_the_ID(), 'category', array('fields' => 'names'))),
                     'Tags'        => implode(', ', wp_get_post_terms(get_the_ID(), 'post_tag', array('fields' => 'names'))),
-                    'Start Date'  => get_post_meta(get_the_ID(), '_project_start_date', true),
-                    'End Date'    => get_post_meta(get_the_ID(), '_project_end_date', true)
+                    'Start Date'  => get_post_meta(get_the_ID(), 'start_date', true),
+                    'End Date'    => get_post_meta(get_the_ID(), 'end_date', true)
                 );
 
                 if (!empty($columns) && $columns[0] !== 'all') {

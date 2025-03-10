@@ -24,8 +24,8 @@ class Tanish_Portfolio_Meta_Box {
 
     public function render_project_meta_box($post) {
         // Retrieve existing values
-        $start_date = get_post_meta($post->ID, '_project_start_date', true);
-        $end_date = get_post_meta($post->ID, '_project_end_date', true);
+        $start_date = get_post_meta($post->ID, 'start_date', true);
+        $end_date = get_post_meta($post->ID, 'end_date', true);
 
         // Security nonce
         wp_nonce_field('save_project_details', 'project_details_nonce');
@@ -83,15 +83,15 @@ class Tanish_Portfolio_Meta_Box {
         error_log('Saving meta box data: ' . print_r($_POST, true));
     
         // Validate and sanitize the start date
-        if (isset($_POST['project_start_date'])) {
-            $start_date = sanitize_text_field($_POST['project_start_date']);
-            update_post_meta($post_id, '_project_start_date', $start_date);
+        if (isset($_POST['start_date'])) {
+            $start_date = sanitize_text_field($_POST['start_date']);
+            update_post_meta($post_id, 'start_date', $start_date);
         }
     
         // Validate and sanitize the end date
-        if (isset($_POST['project_end_date'])) {
-            $end_date = sanitize_text_field($_POST['project_end_date']);
-            update_post_meta($post_id, '_project_end_date', $end_date);
+        if (isset($_POST['end_date'])) {
+            $end_date = sanitize_text_field($_POST['end_date']);
+            update_post_meta($post_id, 'end_date', $end_date);
         }
     }
     
