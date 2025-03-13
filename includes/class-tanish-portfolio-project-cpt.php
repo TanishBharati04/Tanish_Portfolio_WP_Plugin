@@ -8,6 +8,8 @@ class Tanish_Portfolio_Project_CPT {
     
     public function __construct() {
         add_action('init', array($this, 'register_project_cpt'));
+        add_filter('the_content', array($this, 'add_social_share_button'));
+
     }
 
     public function register_project_cpt() {
@@ -33,6 +35,7 @@ class Tanish_Portfolio_Project_CPT {
             'publicly_queryable' => true,
             'show_ui'            => true,
             'show_in_menu'       => true,
+            'menu_icon'          => 'dashicons-portfolio',
             'query_var'          => true,
             'rewrite'            => array('slug' => 'projects'),
             'capability_type'    => 'post',
@@ -49,4 +52,15 @@ class Tanish_Portfolio_Project_CPT {
         // 🔍 Debug: Log available taxonomies for 'project'
         // error_log("Registered Taxonomies for 'project': " . print_r(get_object_taxonomies('project', 'names'), true));
     }
+
+    public function add_social_share_button($content) {
+        if (is_singular('project') && in_the_loop() && is_main_query()) {
+            ob_start();
+            include plugin_dir_path(__FILE__) . '../public/partials/tanish-portfolio-social-share.php';
+            $social_share_html = ob_get_clean();
+            return $content . $social_share_html;
+        }
+        return $content;
+    }
+    
 }

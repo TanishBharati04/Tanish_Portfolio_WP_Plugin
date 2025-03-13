@@ -1,0 +1,23 @@
+.social-share-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.instagram-share-btn {
+    background-color: #E1306C;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.instagram-share-btn:hover {
+    background-color: #C1225A;
+}
+
+.share-count-display {
+    font-size: 14px;
+    margin-top: 10px;
+}

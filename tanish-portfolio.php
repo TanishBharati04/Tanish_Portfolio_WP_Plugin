@@ -76,12 +76,15 @@ function tanish_portfolio_init() {
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-import-export.php';
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-import-handler.php';
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-export-handler.php';
+	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-share-handler.php';
 
     new Tanish_Portfolio_Project_CPT();
     new Tanish_Portfolio_Meta_Box();
 	new Tanish_Portfolio_Import_Export();
 	new Tanish_Portfolio_Import_Handler();
 	new Tanish_Portfolio_Export_Handler();
+	new Tanish_Portfolio_Share_Handler();
+
 }
 add_action('plugins_loaded', 'tanish_portfolio_init');
 
