@@ -1,12 +1,11 @@
 jQuery(document).ready(function ($) {
     $(".instagram-share-btn").on("click", function () {
-        var button = $(this);
-        var projectId = button.data("project-id");
-        var projectUrl = button.data("project-url");
-        var projectTitle = button.data("project-title");
+        let button = $(this);
+        let projectId = button.data("project-id");
+        let projectUrl = button.data("project-url");
 
-        // Fake Instagram share logic (since Instagram doesn’t allow direct sharing)
-        alert("To share, copy this link: " + projectUrl);
+        // Open Instagram Share (Placeholder URL, Needs API later)
+        window.open("https://www.instagram.com/share?url=" + encodeURIComponent(projectUrl), "_blank");
 
         // Send AJAX request to increase share count
         $.ajax({
@@ -20,6 +19,9 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response.success) {
                     $("#share-count-" + projectId).text(response.data.share_count);
+                }
+                else {
+                    console.error("Share count update failed.");
                 }
             }
         });
