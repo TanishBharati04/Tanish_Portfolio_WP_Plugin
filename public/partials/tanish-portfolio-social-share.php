@@ -19,12 +19,14 @@ $project_title = get_the_title();
 ?>
 
 <div class="social-share-container">
-    <button class="instagram-share-btn" data-project-id="<?php echo $project_id; ?>" data-project-url="<?php echo esc_url($project_url); ?>" data-project-title="<?php echo esc_attr($project_title); ?>">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-            <polyline points="16 6 12 2 8 6" />
-            <line x1="12" y1="2" x2="12" y2="15" />
-        </svg>
-    </button>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($project_url); ?>" target="_blank">
+        <button class="facebook-share-btn" data-project-id="<?php echo $project_id; ?>" data-project-url="<?php echo esc_url($project_url); ?>" data-project-title="<?php echo esc_attr($project_title); ?>">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+        </button>
+    </a>
     <p class="share-count-display">Shared: <span id="share-count-<?php echo $project_id; ?>"><?php echo $share_count; ?></span> times</p>
 </div>

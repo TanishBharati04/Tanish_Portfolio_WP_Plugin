@@ -77,6 +77,8 @@ function tanish_portfolio_init() {
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-import-handler.php';
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-export-handler.php';
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-share-handler.php';
+	require_once TANISH_PORTFOLIO_PATH . 'admin/class-tanish-portfolio-project-dashboard.php';
+	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-analytics.php';
 
     new Tanish_Portfolio_Project_CPT();
     new Tanish_Portfolio_Meta_Box();
@@ -84,6 +86,8 @@ function tanish_portfolio_init() {
 	new Tanish_Portfolio_Import_Handler();
 	new Tanish_Portfolio_Export_Handler();
 	new Tanish_Portfolio_Share_Handler();
+	new Tanish_Portfolio_Project_Dashboard();
+	new Tanish_Portfolio_Analytics();
 
 }
 add_action('plugins_loaded', 'tanish_portfolio_init');

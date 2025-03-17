@@ -3,7 +3,7 @@
     margin: 20px 0;
 }
 
-.instagram-share-btn {
+.facebook-share-btn {
     background-color: #E1306C;
     color: white;
     border: none;
@@ -13,7 +13,7 @@
     cursor: pointer;
 }
 
-.instagram-share-btn:hover {
+.facebook-share-btn:hover {
     background-color: #C1225A;
 }
 

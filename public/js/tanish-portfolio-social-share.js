@@ -5,7 +5,7 @@ jQuery(document).ready(function ($) {
         let projectUrl = button.data("project-url");
 
         // Open Instagram Share (Placeholder URL, Needs API later)
-        window.open("https://www.instagram.com/share?url=" + encodeURIComponent(projectUrl), "_blank");
+        // window.open("https://www.instagram.com/share?url=" + encodeURIComponent(projectUrl), "_blank");
 
         // Send AJAX request to increase share count
         $.ajax({
