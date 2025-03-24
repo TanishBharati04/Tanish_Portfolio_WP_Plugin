@@ -1,8 +1,8 @@
 jQuery(document).ready(function ($) {
-    $(".instagram-share-btn").on("click", function () {
+    $(".facebook-share-btn").on("click", function () {
         let button = $(this);
         let projectId = button.data("project-id");
-        let projectUrl = button.data("project-url");
+        // let projectUrl = button.data("project-url");
 
         // Open Instagram Share (Placeholder URL, Needs API later)
         // window.open("https://www.instagram.com/share?url=" + encodeURIComponent(projectUrl), "_blank");

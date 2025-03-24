@@ -17,7 +17,7 @@ class Tanish_Portfolio_Export_Handler {
     // Handle fetching categories and tags for export section
     public function fetch_taxonomies() {
         // Debug received nonce
-        error_log("Received Nonce in export handler: " . ($_POST['security'] ?? 'NOT SET'));
+        // error_log("Received Nonce in export handler: " . ($_POST['security'] ?? 'NOT SET'));
         
         // Fix: Use check_ajax_referer instead of wp_verify_nonce
         check_ajax_referer('tanish_nonce', 'security');
@@ -29,7 +29,7 @@ class Tanish_Portfolio_Export_Handler {
         //     return;
         // }
 
-        error_log("Fetching Taxonomies... in export handler");
+        // error_log("Fetching Taxonomies... in export handler");
 
         // Fetch categories
         $categories = get_terms(array(
@@ -44,12 +44,12 @@ class Tanish_Portfolio_Export_Handler {
         ));
 
         if (is_wp_error($categories)) {
-            error_log("Error fetching categories: " . $categories->get_error_message());
+            // error_log("Error fetching categories: " . $categories->get_error_message());
             wp_send_json_error(array('message' => 'Failed to fetch categories.'));
         }
     
         if (is_wp_error($tags)) {
-            error_log("Error fetching tags: " . $tags->get_error_message());
+            // error_log("Error fetching tags: " . $tags->get_error_message());
             wp_send_json_error(array('message' => 'Failed to fetch tags.'));
         }
 
@@ -70,7 +70,7 @@ class Tanish_Portfolio_Export_Handler {
             );
         }
 
-        error_log("Categories and Tags Fetched Successfully.");
+        // error_log("Categories and Tags Fetched Successfully.");
 
         wp_send_json_success(array(
             'categories' => $category_list,

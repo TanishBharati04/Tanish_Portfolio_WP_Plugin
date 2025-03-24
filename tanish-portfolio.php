@@ -79,6 +79,9 @@ function tanish_portfolio_init() {
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-share-handler.php';
 	require_once TANISH_PORTFOLIO_PATH . 'admin/class-tanish-portfolio-project-dashboard.php';
 	require_once TANISH_PORTFOLIO_PATH . 'includes/class-tanish-portfolio-analytics.php';
+	require_once TANISH_PORTFOLIO_PATH . 'admin/tanish-portfolio-contact-settings.php';
+	require_once TANISH_PORTFOLIO_PATH . 'public/tanish-portfolio-contact-form.php';
+	require_once TANISH_PORTFOLIO_PATH . 'includes/tanish-portfolio-contact-handler.php';
 
     new Tanish_Portfolio_Project_CPT();
     new Tanish_Portfolio_Meta_Box();
@@ -88,9 +91,29 @@ function tanish_portfolio_init() {
 	new Tanish_Portfolio_Share_Handler();
 	new Tanish_Portfolio_Project_Dashboard();
 	new Tanish_Portfolio_Analytics();
+	new Tanish_Portfolio_Contact_Settings();
+	new Tanish_Portfolio_Contact_Form();
+	new Tanish_Portfolio_Contact_Handler();
 
 }
 add_action('plugins_loaded', 'tanish_portfolio_init');
+
+// add_action('init', function() {
+//     $to = 'tanishbharati0412@gmail.com';
+//     $subject = 'Test Email';
+//     $message = 'This is a test email from WordPress.';
+//     $headers = [
+// 		'From: Tanish Portfolio <noreply@wisdmlabs.com>',
+// 		'Content-Type: text/html; charset=UTF-8'
+// 	];
+
+//     if(wp_mail($to, $subject, $message, $headers)) {
+//         echo "Email sent successfully!";
+//     } else {
+//         echo "Failed to send email.";
+//     }
+// });
+
 
 /**
  * The core plugin class that is used to define internationalization,

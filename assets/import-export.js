@@ -98,7 +98,7 @@ jQuery(document).ready(function ($) {
 
     // Fetch categories and tags for the export section
     function fetchTaxonomies() {
-        console.log("Fetching taxonomies...");
+        // console.log("Fetching taxonomies...");
         // console.log("Nonce before AJAX:", tanishAjax.nonce);
 
         $.ajax({
@@ -161,7 +161,7 @@ jQuery(document).ready(function ($) {
                 if (response.success) {
                     // window.location.href = response.file_url;
                     let fileUrl = response.data.file_url;
-                    console.log("File URL:", fileUrl); // Ensure the correct file URL
+                    // console.log("File URL:", fileUrl); // Ensure the correct file URL
 
                     window.location.href = fileUrl; // Trigger file download
                 } else {
